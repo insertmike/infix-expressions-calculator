@@ -19,12 +19,12 @@ bool isOperator(String token){
 }
 
 void main(){
-  final String mathInfixExpression = "2 * ( 3 - 4 ) - 3";
+  final String mathInfixExpression = "2*(3-4)-3";
 
   final Queue<String> expressionTokens = new Queue<String>();
   final Stack<Operator> operators = new Stack<Operator>();
   final Queue<String> output = new Queue<String>();
-
+  
   // Load characters in expressionTokens Queue
   for (var char in mathInfixExpression.split("")) {
     expressionTokens.add(char);  
@@ -32,41 +32,51 @@ void main(){
 
   // Load tokens into operators and output
   while (expressionTokens.isNotEmpty) {
-    String token =expressionTokens.removeFirst();
+    String token = expressionTokens.removeFirst();
 
     if(isNumeric(token)){
       output.add(token);
     }
 
     else if(isOperator(token)){
-        Operator operator = new Operator(token);
+        Operator curr_operator = new Operator(token);
         Operator top_operator = null;
         if(operators.isNotEmpty){
-          Operator top_operator = operators.top();
+          top_operator = operators.top();
         }
         
 
         if(token == Constants.CLOSING_BRACKET){
-          while(top_operator != null && top_operator != Constants.OPENING_BRACKET ){
+          while(top_operator != null && top_operator.operator != Constants.OPENING_BRACKET ){
             output.add(top_operator.operator);
             operators.pop();
-            top_operator = operators.top();
+            top_operator = null;
+            if(operators.isNotEmpty){
+              top_operator =operators.top();
+            }
           }
-          operators.push(operator);
+          if(operators.isNotEmpty){
+            operators.pop();
+          }
+          
         }
         else if(token ==Constants.OPENING_BRACKET){
-          operators.push(operator);
+          operators.push(curr_operator);
         } else {
-          while(top_operator != null && top_operator.getPrecedence() > operator.getPrecedence()){
+          while(top_operator != null && top_operator.getPrecedence() > curr_operator.getPrecedence()){
             output.add(top_operator.operator);
             operators.pop();
-            top_operator =operators.top();
+            top_operator = null;
+            if(operators.isNotEmpty){
+              top_operator =operators.top();
+            }
+            
           }
-          operators.push(operator);
+          operators.push(curr_operator);
         }
     }
   }
-  
+  print('');
   while (operators.isNotEmpty) {
         Operator operator = operators.pop();
         output.add(operator.operator);

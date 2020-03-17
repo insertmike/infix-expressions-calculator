@@ -1,3 +1,6 @@
+
+import './constants.dart' as Constants;
+
 class Operator {
   String operator;
 
@@ -6,7 +9,7 @@ class Operator {
   }
 
   int getPrecedence() {
-      if (this.operator == "(" )  return 1;
+      if (operator == Constants.OPENING_BRACKET )  return 1;
       else if (this.operator == "+" || this.operator == "-" )  return 2;
       else if (this.operator == "+" || this.operator == "-")   return 2;
       else if (this.operator == "*" || this.operator == "/")   return 3;
