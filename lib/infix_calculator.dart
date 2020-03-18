@@ -16,6 +16,11 @@ class InfixCalculator {
   /// Calculates infix expression by parsing it to a postfix 
   /// and evaluating the postfix expression
   double calculateInfixExpression(String infixExpression){
+
+    if(infixExpression == null || infixExpression.isEmpty){
+      throw new ArgumentError("Infix Expression is empty");
+    }
+
     String postFixExpression = _convertInfixToPostfix(infixExpression);   
     return _calculatePostfixExpression(postFixExpression);
   } 
@@ -23,6 +28,11 @@ class InfixCalculator {
   /// Calculates infix expression by parsing it to a postfix 
   /// and evaluating the postfix expression
   double _calculatePostfixExpression(String postfixExpression) {
+
+    if(postfixExpression == null || postfixExpression.isEmpty){
+      throw new ArgumentError("Infix Expression is empty");
+    }
+
     var queue = Queue<String>();
     var stack = new Stack<double>();
 
@@ -50,6 +60,11 @@ class InfixCalculator {
 
   /// Converts Infix expression to Postfix using the Shunting-Yard Algorithm 
   String _convertInfixToPostfix(String infixExpression) {
+
+    if(infixExpression == null || infixExpression.isEmpty){
+      throw new ArgumentError("Infix Expression is empty");
+    }
+
     final Queue expressionTokens = Queue<String>();
     final Stack operators = Stack<Operator>();
     final Queue output = Queue<String>();
@@ -119,7 +134,7 @@ class InfixCalculator {
     }
     return double.parse(s, (e) => null) != null;
   }
-  
+
   /// Checks if string value is operator by checking
   /// if it is contained in supported operators.
   bool _isOperator(String token) {
