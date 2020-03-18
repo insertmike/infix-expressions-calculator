@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:stack/stack.dart';
 import '../lib/operator.dart';
 import '../lib/constants.dart' as Constants;
+import '../lib/postfix_calculator.dart';
 
 bool isNumeric(String s) {
   if(s == null) {
@@ -18,15 +19,15 @@ bool isOperator(String token){
   return Constants.SUPPORTED_OPERATORS.contains(token);
 }
 
-void main(){
-  final String mathInfixExpression = "2*(3-4)-3";
+// Uses Shaunting-Yard algorithm
+String getPostfixExpression(String infixExpression){
 
-  final Queue<String> expressionTokens = new Queue<String>();
-  final Stack<Operator> operators = new Stack<Operator>();
-  final Queue<String> output = new Queue<String>();
+  final Queue expressionTokens =  Queue<String>();
+  final Stack operators =  Stack<Operator>();
+  final Queue output =  Queue<String>();
   
   // Load characters in expressionTokens Queue
-  for (var char in mathInfixExpression.split("")) {
+  for (var char in infixExpression.split('')) {
     expressionTokens.add(char);  
   }
 
@@ -39,8 +40,9 @@ void main(){
     }
 
     else if(isOperator(token)){
-        Operator curr_operator = new Operator(token);
-        Operator top_operator = null;
+        var curr_operator = Operator(token);
+        Operator top_operator;
+
         if(operators.isNotEmpty){
           top_operator = operators.top();
         }
@@ -76,11 +78,19 @@ void main(){
         }
     }
   }
-  print('');
+  
   while (operators.isNotEmpty) {
         Operator operator = operators.pop();
         output.add(operator.operator);
   }
+  return output.toList().join('');
+}
 
+void main(){
+  final String mathInfixExpression = "2*(3-4)-3";
+
+  print(getPostfixExpression(mathInfixExpression));
+
+  PostfixCalculator postfixCalculator = new PostfixCalculator();
   
 }
