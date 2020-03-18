@@ -60,6 +60,21 @@ class InfixCalculator {
     return stack.pop();
   }
 
+  /// Pops operators off operatorStack having greater or equal precedence to operatorToken, appends the operators
+  ///  to the output string, then pushes operatorToken onto operatorStack.
+  void _handleOperatorCase(String token, Stack<Operator> operators, Queue<String> output){
+
+    // Pop operators off operatorStack having greater or equal precedence to operatorToken.
+    // Note that a left parenthesis on the stack will stop the loop.
+    while(operators.isNotEmpty && _isOperator(operators.top().operator) && Operator.getPrecedence(operators.top().operator) >= Operator.getPrecedence(token))  
+    {
+       output.add(" ");
+       output.add(operators.pop().operator);
+    }
+    output.add(" ");
+    operators.push(Operator(token));
+  }
+
   /// Converts Infix expression to Postfix using the Shunting-Yard Algorithm 
   String _convertInfixToPostfix(String infixExpression) {
 
@@ -68,6 +83,7 @@ class InfixCalculator {
     }
 
     final Queue expressionTokens = Queue<String>();
+    //The shunting-yard algorithm's operator stack.
     final Stack operators = Stack<Operator>();
     final Queue output = Queue<String>();
     infixExpression =infixExpression.replaceAll(' ','');
@@ -81,52 +97,49 @@ class InfixCalculator {
     while (expressionTokens.isNotEmpty) {
       String token = expressionTokens.removeFirst();
 
-      if (_isNumeric(token)) {
-        output.add(token);
-      } else if (_isOperator(token)) {
-        var curr_operator = Operator(token);
-        Operator top_operator;
-
-        if (operators.isNotEmpty) {
-          top_operator = operators.top();
-        }
-
-        if (token == Constants.CLOSING_BRACKET) {
-          while (top_operator != null &&
-              top_operator.operator != Constants.OPENING_BRACKET) {
-            output.add(top_operator.operator);
-            operators.pop();
-            top_operator = null;
-            if (operators.isNotEmpty) {
-              top_operator = operators.top();
-            }
+      if(_isOperator(token)){
+        _handleOperatorCase(token, operators, output);
+      } else{
+          switch (token) {
+            case Constants.OPENING_BRACKET:
+              operators.push(Operator(token));
+              break;
+            case Constants.CLOSING_BRACKET:
+              handleRightParenthesisCase(operators, output);
+              break;
+            default:
+              // Token must be a number. Don't append a space since the number may have multiple digits.
+              output.add(token);
+              break;
           }
-          if (operators.isNotEmpty) {
-            operators.pop();
-          }
-        } else if (token == Constants.OPENING_BRACKET) {
-          operators.push(curr_operator);
-        } else {
-          while (top_operator != null &&
-              top_operator.getPrecedence() > curr_operator.getPrecedence()) {
-            output.add(top_operator.operator);
-            operators.pop();
-            top_operator = null;
-            if (operators.isNotEmpty) {
-              top_operator = operators.top();
-            }
-          }
-          operators.push(curr_operator);
         }
       }
-    }
-
-    while (operators.isNotEmpty) {
-      Operator operator = operators.pop();
-      output.add(operator.operator);
-    }
-
+    
+    emptyOperatorStack(operators, output);
     return output.toList().join('');
+  }
+  
+  void emptyOperatorStack(Stack<Operator> operators, Queue<String> output){
+    while (operators.isNotEmpty) {
+      if(operators.top().operator == Constants.OPENING_BRACKET){
+        throw new Exception("Missing: "+ Constants.CLOSING_BRACKET + " paranthesis");
+      }
+      output.add(" ");
+      output.add(operators.pop().operator);
+    }
+  }
+  /// Pops operators off operatorStack and appends them to the output string until a matching left parenthesis
+  /// is found. The matching left parenthesis is then popped off operatorStack but is not appended to the output
+  /// string.
+  void handleRightParenthesisCase(Stack<Operator> operators, Queue<String> output){
+    while(operators.isNotEmpty && operators.top().operator != Constants.OPENING_BRACKET){
+      output.add(" ");
+      output.add(operators.pop().operator);
+    }
+    if(operators.isEmpty){
+      throw new Exception("Missing " + Constants.OPENING_BRACKET + " paranthesis");
+    }
+    operators.pop();
   }
 
   /// Checks if a string value by attempting to parse 

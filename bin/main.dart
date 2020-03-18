@@ -2,7 +2,7 @@ import '../lib/infix_calculator.dart';
 import 'package:test/test.dart';
 
 void main() {
-  final String infixExpression = "3 - 2 * 5";
+  final String infixExpression = "5 * (2 + 2)";
   InfixCalculator postfixCalculator = new InfixCalculator();
 
   print(postfixCalculator.calculateInfixExpression(infixExpression));
