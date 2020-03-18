@@ -1,4 +1,6 @@
+
 import 'dart:collection';
+import 'dart:core';
 import 'package:stack/stack.dart';
 import '../lib/constants.dart' as Constants;
 import '../lib/operator.dart';
@@ -68,7 +70,8 @@ class InfixCalculator {
     final Queue expressionTokens = Queue<String>();
     final Stack operators = Stack<Operator>();
     final Queue output = Queue<String>();
-
+    infixExpression =infixExpression.replaceAll(' ','');
+    
     // Load characters in expressionTokens Queue
     for (var char in infixExpression.split('')) {
       expressionTokens.add(char);
