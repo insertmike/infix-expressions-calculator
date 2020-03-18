@@ -18,10 +18,10 @@ class InfixCalculator {
   
   /// Calculates infix expression by parsing it to a postfix 
   /// and evaluating the postfix expression
-  double calculateInfixExpression(String infixExpression){
+  double calculate(String infixExpression){
 
     if(infixExpression == null || infixExpression.isEmpty){
-      throw new ArgumentError("Infix Expression is empty");
+      throw new ArgumentError("Empty Expression");
     }
 
     String postFixExpression = _convertInfixToPostfix(infixExpression);   
@@ -56,14 +56,14 @@ class InfixCalculator {
               output.push(leftOperand * rightOperand);
               break;
             default:
-              throw new Exception("Unsupported operator: " + token);
+              throw new FormatException("Unsupported operator: " + token);
           }
         }catch(e){
-          throw new Exception("Too many operators. Exception: " + e.toString());
+          throw new FormatException("Too many operators. Exception: " + e.toString());
         }
       } else {
           if(!_isNumeric(token)){
-            throw new Exception("Token is not a valid number: " + token);      
+            throw new FormatException("Token is not a valid number: " + token);      
           }
           output.push(double.parse(token));
       }
@@ -134,7 +134,7 @@ class InfixCalculator {
   void emptyOperatorStack(Stack<Operator> operators, Queue<String> output){
     while (operators.isNotEmpty) {
       if(operators.top().operator == Constants.OPENING_BRACKET){
-        throw new Exception("Missing: "+ Constants.CLOSING_BRACKET + " paranthesis");
+        throw new FormatException("Unbalanced brackets. Missing: "+ Constants.CLOSING_BRACKET + " paranthesis.");
       }
       output.add(" ");
       output.add(operators.pop().operator);
@@ -149,7 +149,7 @@ class InfixCalculator {
       output.add(operators.pop().operator);
     }
     if(operators.isEmpty){
-      throw new Exception("Missing " + Constants.OPENING_BRACKET + " paranthesis");
+      throw new FormatException("Unbalanced brackets. Missing: " + Constants.OPENING_BRACKET + " paranthesis.");
     }
     operators.pop();
   }
