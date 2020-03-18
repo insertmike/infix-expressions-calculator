@@ -3,16 +3,25 @@ import 'package:stack/stack.dart';
 import '../lib/constants.dart' as Constants;
 import '../lib/operator.dart';
 
-/**
- * Calculator able to evaluate postfix expressions.
- */
-class Calculator {
+
+///
+/// Infix Expressions Calculator
+/// 
+/// The calculator operates using the shunting-yard algorithm to 
+/// parse the infix expression to a postfix expression and then
+/// evaluate it using a stack
+/// 
+class InfixCalculator {
   
+  /// Calculates infix expression by parsing it to a postfix 
+  /// and evaluating the postfix expression
   double calculateInfixExpression(String infixExpression){
     String postFixExpression = _convertInfixToPostfix(infixExpression);   
     return _calculatePostfixExpression(postFixExpression);
   } 
 
+  /// Calculates infix expression by parsing it to a postfix 
+  /// and evaluating the postfix expression
   double _calculatePostfixExpression(String postfixExpression) {
     var queue = Queue<String>();
     var stack = new Stack<double>();
@@ -39,6 +48,7 @@ class Calculator {
     return stack.pop();
   }
 
+  /// Converts Infix expression to Postfix using the Shunting-Yard Algorithm 
   String _convertInfixToPostfix(String infixExpression) {
     final Queue expressionTokens = Queue<String>();
     final Stack operators = Stack<Operator>();
@@ -101,13 +111,17 @@ class Calculator {
     return output.toList().join('');
   }
 
+  /// Checks if a string value by attempting to parse 
+  /// it to a double data type.
   bool _isNumeric(String s) {
     if (s == null) {
       return false;
     }
     return double.parse(s, (e) => null) != null;
   }
-
+  
+  /// Checks if string value is operator by checking
+  /// if it is contained in supported operators.
   bool _isOperator(String token) {
     if (token == null) {
       return false;

@@ -1,8 +1,7 @@
-import '../lib/calculator.dart';
-
+import '../lib/infix_calculator.dart';
 
 void main() {
-  final String infixExpression = "3*(5-1)-2";
-  Calculator postfixCalculator = new Calculator();
+  final String infixExpression = "3-2*5";
+  InfixCalculator postfixCalculator = new InfixCalculator();
   print(postfixCalculator.calculateInfixExpression(infixExpression));
 }
