@@ -4,6 +4,7 @@ import 'dart:core';
 import 'package:stack/stack.dart';
 import '../lib/constants.dart' as Constants;
 import '../lib/operator.dart';
+import 'dart:math';
 
 
 ///
@@ -26,38 +27,53 @@ class InfixCalculator {
     String postFixExpression = _convertInfixToPostfix(infixExpression);   
     return _calculatePostfixExpression(postFixExpression);
   } 
-
+  
   /// Calculates infix expression by parsing it to a postfix 
   /// and evaluating the postfix expression
-  double _calculatePostfixExpression(String postfixExpression) {
-
+  double _calculatePostfixExpression(String postfixExpression){
     if(postfixExpression == null || postfixExpression.isEmpty){
       throw new ArgumentError("Infix Expression is empty");
     }
-
-    var queue = Queue<String>();
-    var stack = new Stack<double>();
-
-    // Load queue
-    for (var char in postfixExpression.split('')) {
-      queue.add(char);
-    }
-
-    for (String token in queue) {
-      if (_isNumeric(token))
-        stack.push(double.parse(token));
-      else {
-        if (stack.isEmpty) continue;
-        double right = stack.pop();
-        double left = stack.pop();
-
-        if (token == Constants.PLUS_SIGN) stack.push(left + right);
-        if (token == Constants.MINUS_SIGN) stack.push(left - right);
-        if (token == Constants.MULTIPLICATION_SIGN) stack.push(left * right);
-        if (token == Constants.DIVISION_SIGN) stack.push(left / right);
+    var output = new Stack<double>();
+       
+    for (var token in postfixExpression.split(' ')) {
+      if(_isOperator(token)){
+        try{
+          double rightOperand =output.pop(); 
+          double leftOperand = output.pop();
+          
+          switch (token) {
+            case Constants.MINUS_SIGN:
+              output.push(leftOperand - rightOperand);
+              break;
+            case Constants.PLUS_SIGN:
+              output.push(leftOperand + rightOperand);
+              break;
+            case Constants.DIVISION_SIGN:
+              output.push(leftOperand / rightOperand);
+              break;
+            case Constants.MULTIPLICATION_SIGN:
+              output.push(leftOperand * rightOperand);
+              break;
+            default:
+              throw new Exception("Unsupported operator: " + token);
+          }
+        }catch(e){
+          throw new Exception("Too many operators. Exception: " + e.toString());
+        }
+      } else {
+          if(!_isNumeric(token)){
+            throw new Exception("Token is not a valid number: " + token);      
+          }
+          output.push(double.parse(token));
       }
     }
-    return stack.pop();
+
+    return _roundDouble(output.pop(), 2);
+  }
+  double _roundDouble(double value, int places){ 
+   double mod = pow(10.0, places); 
+   return ((value * mod).round().toDouble() / mod); 
   }
 
   /// Pops operators off operatorStack having greater or equal precedence to operatorToken, appends the operators

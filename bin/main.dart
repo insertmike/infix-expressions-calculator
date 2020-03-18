@@ -41,13 +41,13 @@ void main() {
   });  
 
   test('8Test calculateInfixExpression for expression with additon, subtraction, division and multiplication', () {
-    expect(postfixCalculator.calculateInfixExpression("5.0214 / 6.2033"), .8095);
+    expect(postfixCalculator.calculateInfixExpression("5.0214 / 6.2033"), .81);
   });    
 
-
   test('9Test calculateInfixExpression for expression with additon, subtraction, division and multiplication', () {
-    expect(postfixCalculator.calculateInfixExpression("1.00000001 * (2.093198 + 5.3232234) - 9.24 / 7"), .8095);
+    expect(postfixCalculator.calculateInfixExpression("1.00000001 * (2.093198 + 5.3232234) - 9.24 / 7"), 6.1);
   });     
+
   // test('Test calculateInfixExpression for null argument', () {
   //   expect(postfixCalculator.calculateInfixExpression(null), throwsA(TypeMatcher<ArgumentError>()));
   // });
