@@ -69,11 +69,7 @@ class InfixCalculator {
       }
     }
 
-    return _roundDouble(output.pop(), 2);
-  }
-  double _roundDouble(double value, int places){ 
-   double mod = pow(10.0, places); 
-   return ((value * mod).round().toDouble() / mod); 
+    return output.pop();
   }
 
   /// Pops operators off operatorStack having greater or equal precedence to operatorToken, appends the operators
@@ -95,7 +91,7 @@ class InfixCalculator {
   String _convertInfixToPostfix(String infixExpression) {
 
     if(infixExpression == null || infixExpression.isEmpty){
-      throw new ArgumentError("Infix Expression is empty");
+      throw new ArgumentError("Empty Expression");
     }
 
     final Queue expressionTokens = Queue<String>();

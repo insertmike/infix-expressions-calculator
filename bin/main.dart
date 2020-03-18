@@ -7,50 +7,56 @@ void main() {
 
   print(postfixCalculator.calculateInfixExpression(infixExpression));
 
-  test('0Test calculateInfixExpression for single value', () {
+  test('Test calculateInfixExpression for single value', () {
     expect(postfixCalculator.calculateInfixExpression("2"), 2.0);
   });
   
-  test('1Test calculateInfixExpression for addition', () {
+  test('Test calculateInfixExpression for addition', () {
     expect(postfixCalculator.calculateInfixExpression("2 + 2"), 4.0);
   });
 
-  test('2Test calculateInfixExpression for addition and subtraction', () {
-    expect(postfixCalculator.calculateInfixExpression("5 + 5 - 2"), 8.0);
+  test('Test calculateInfixExpression for subtraction', () {
+    expect(postfixCalculator.calculateInfixExpression("4 - 2"), 2.0);
   });
 
-  test('3Test calculateInfixExpression for expression with additon, subtraction, division and multiplication', () {
+  test('Test calculateInfixExpression for multiplication', () {
+    expect(postfixCalculator.calculateInfixExpression("4 * 2"), 8.0);
+  });
+
+  test('Test calculateInfixExpression for division', () {
+    expect(postfixCalculator.calculateInfixExpression("4 / 2"), 2.0);
+  });
+
+  test('Test calculateInfixExpression for mixed operators', () {
     expect(postfixCalculator.calculateInfixExpression("(5 * 2) + 2"), 12.0);
   });
 
-  test('4Test calculateInfixExpression for expression with additon, subtraction, division and multiplication', () {
+  test('Test calculateInfixExpression for mixed operators', () {
     expect(postfixCalculator.calculateInfixExpression("5 * (2 + 2)"), 20.0);
   });
 
-  test('5Test calculateInfixExpression for expression with additon, subtraction, division and multiplication', () {
-    expect(postfixCalculator.calculateInfixExpression("((5 * 2) + (5 * 3))"), 25.0);
+  test('Test calculateInfixExpression for mixed operators', () {
+    expect(postfixCalculator.calculateInfixExpression("(5 * (2 + 5) * 3)"), 105.0);
   });
 
-  test('6Test calculateInfixExpression for expression with additon, subtraction, division and multiplication', () {
-    expect(postfixCalculator.calculateInfixExpression("(5 * (2 + 5) * 3)"), 105.0);
-  });  
-
+  test('Test calculateInfixExpression for mixed operators', () {
+    expect(postfixCalculator.calculateInfixExpression("1.00000001 * (2.093198 + 5.3232234) - 9.24 / 7"), 6.096421474164213);
+  });
   
-  test('7Test calculateInfixExpression for expression with additon, subtraction, division and multiplication', () {
-    expect(postfixCalculator.calculateInfixExpression("4.47 + 1.02 * 3"), 7.53);
-  });  
+  test('Test calculateInfixExpression for mixed operators', () {
+    expect(postfixCalculator.calculateInfixExpression("8.65468 - 6.65465 - 2.65654"),-0.6565099999999995);
+  });
 
-  test('8Test calculateInfixExpression for expression with additon, subtraction, division and multiplication', () {
-    expect(postfixCalculator.calculateInfixExpression("5.0214 / 6.2033"), .81);
-  });    
+  test('when start > stop', () {
+    try {
+      postfixCalculator.calculateInfixExpression(null);
+    } on ArgumentError catch(e) {
+      expect(e.message, 'Empty Expression');
+      return;
+    }
+    throw new Exception("Expected Empty Expression Exception");  
+  });
 
-  test('9Test calculateInfixExpression for expression with additon, subtraction, division and multiplication', () {
-    expect(postfixCalculator.calculateInfixExpression("1.00000001 * (2.093198 + 5.3232234) - 9.24 / 7"), 6.1);
-  });     
-
-  // test('Test calculateInfixExpression for null argument', () {
-  //   expect(postfixCalculator.calculateInfixExpression(null), throwsA(TypeMatcher<ArgumentError>()));
-  // });
 
   
 }
