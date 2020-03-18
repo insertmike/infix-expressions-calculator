@@ -3,9 +3,6 @@ import 'dart:collection';
 import 'dart:core';
 import 'package:stack/stack.dart';
 import '../lib/constants.dart' as Constants;
-import '../lib/operator.dart';
-import 'dart:math';
-
 
 ///
 /// Infix Expressions Calculator
@@ -74,17 +71,17 @@ class InfixCalculator {
 
   /// Pops operators off operatorStack having greater or equal precedence to operatorToken, appends the operators
   ///  to the output string, then pushes operatorToken onto operatorStack.
-  void _handleOperatorCase(String token, Stack<Operator> operators, Queue<String> output){
+  void _handleOperatorCase(String token, Stack<String> operators, Queue<String> output){
 
     // Pop operators off operatorStack having greater or equal precedence to operatorToken.
     // Note that a left parenthesis on the stack will stop the loop.
-    while(operators.isNotEmpty && _isOperator(operators.top().operator) && Operator.getPrecedence(operators.top().operator) >= Operator.getPrecedence(token))  
+    while(operators.isNotEmpty && _isOperator(operators.top()) && _getOperatorPrecedence(operators.top()) >= _getOperatorPrecedence(token))  
     {
        output.add(" ");
-       output.add(operators.pop().operator);
+       output.add(operators.pop());
     }
     output.add(" ");
-    operators.push(Operator(token));
+    operators.push(token);
   }
 
   /// Converts Infix expression to Postfix using the Shunting-Yard Algorithm 
@@ -96,7 +93,7 @@ class InfixCalculator {
 
     final Queue expressionTokens = Queue<String>();
     //The shunting-yard algorithm's operator stack.
-    final Stack operators = Stack<Operator>();
+    final Stack operators = Stack<String>();
     final Queue output = Queue<String>();
     infixExpression =infixExpression.replaceAll(' ','');
     
@@ -114,7 +111,7 @@ class InfixCalculator {
       } else{
           switch (token) {
             case Constants.OPENING_BRACKET:
-              operators.push(Operator(token));
+              operators.push(token);
               break;
             case Constants.CLOSING_BRACKET:
               handleRightParenthesisCase(operators, output);
@@ -131,22 +128,22 @@ class InfixCalculator {
     return output.toList().join('');
   }
   
-  void emptyOperatorStack(Stack<Operator> operators, Queue<String> output){
+  void emptyOperatorStack(Stack<String> operators, Queue<String> output){
     while (operators.isNotEmpty) {
-      if(operators.top().operator == Constants.OPENING_BRACKET){
+      if(operators.top() == Constants.OPENING_BRACKET){
         throw new FormatException("Unbalanced brackets. Missing: "+ Constants.CLOSING_BRACKET + " paranthesis.");
       }
       output.add(" ");
-      output.add(operators.pop().operator);
+      output.add(operators.pop());
     }
   }
   /// Pops operators off operatorStack and appends them to the output string until a matching left parenthesis
   /// is found. The matching left parenthesis is then popped off operatorStack but is not appended to the output
   /// string.
-  void handleRightParenthesisCase(Stack<Operator> operators, Queue<String> output){
-    while(operators.isNotEmpty && operators.top().operator != Constants.OPENING_BRACKET){
+  void handleRightParenthesisCase(Stack<String> operators, Queue<String> output){
+    while(operators.isNotEmpty && operators.top() != Constants.OPENING_BRACKET){
       output.add(" ");
-      output.add(operators.pop().operator);
+      output.add(operators.pop());
     }
     if(operators.isEmpty){
       throw new FormatException("Unbalanced brackets. Missing: " + Constants.OPENING_BRACKET + " paranthesis.");
@@ -171,4 +168,12 @@ class InfixCalculator {
     }
     return Constants.SUPPORTED_OPERATORS.contains(token);
   }
+  
+  static int _getOperatorPrecedence(String operator) {
+      if (operator == Constants.OPENING_BRACKET )  return 1;
+      else if (operator == "+" || operator == "-" )  return 2;
+      else if (operator == "+" || operator == "-")   return 2;
+      else if (operator == "*" || operator == "/")   return 3;
+      else return -1;
+  }  
 }
