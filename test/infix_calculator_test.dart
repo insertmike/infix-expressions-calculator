@@ -20,7 +20,6 @@ void main() {
     try {
       infixCalculator.calculate("2 + 5)");
     } on FormatException catch(e) {
-      // Call to e.message is not possible. Exception is neither FormatException
       expect(e.message, 'Unbalanced brackets. Missing: ( paranthesis.');
       return;
     }
