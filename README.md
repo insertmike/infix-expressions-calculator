@@ -1,4 +1,4 @@
-# Infix Expression Calculator
+# Infix Expressions Calculator
 
 ## Abstract
 
