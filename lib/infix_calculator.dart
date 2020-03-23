@@ -114,7 +114,7 @@ class InfixCalculator {
               operators.push(token);
               break;
             case Constants.CLOSING_BRACKET:
-              handleRightParenthesisCase(operators, output);
+              _handleRightParenthesisCase(operators, output);
               break;
             default:              
               // It doesn't append a space since numbers may have multiple digits.
@@ -124,11 +124,11 @@ class InfixCalculator {
         }
       }
     
-    emptyOperatorStack(operators, output);
+    _emptyOperatorStack(operators, output);
     return output.join('');
   }
   
-  void emptyOperatorStack(Stack<String> operators, List<String> output){
+  void _emptyOperatorStack(Stack<String> operators, List<String> output){
     while (operators.isNotEmpty) {
       if(operators.top() == Constants.OPENING_BRACKET){
         throw new FormatException("Unbalanced brackets. Missing: "+ Constants.CLOSING_BRACKET + " paranthesis.");
@@ -140,7 +140,7 @@ class InfixCalculator {
 
   /// Until a matching left paranthesis is not found, it pops operators off operators stack and appends them to the output list.
   /// Matching left paranthesis is then popped off operators stack and is not appended to the output.
-  void handleRightParenthesisCase(Stack<String> operators, List<String> output){
+  void _handleRightParenthesisCase(Stack<String> operators, List<String> output){
     while(operators.isNotEmpty && operators.top() != Constants.OPENING_BRACKET){
       output.add(" ");
       output.add(operators.pop());
